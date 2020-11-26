@@ -2,7 +2,11 @@
   "name": "@sangwoo/controller-decorators",
   "version": "1.0.0",
   "description": "Typescript decorators to attach to controller.",
-  "main": "index.js",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "files": [
+    "build/**/*"
+  ],
   "scripts": {
     "clean": "del ./build/*",
     "build": "npm run clean && tsc"

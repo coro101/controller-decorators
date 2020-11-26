@@ -3,7 +3,7 @@ import express from 'express';
 /**
  * Simple singleton class that returns the unique router object.
  */
-export default class AppRouter {
+export class AppRouter {
     private static instance: express.Router;
 
     private constructor() {}

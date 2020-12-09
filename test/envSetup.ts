@@ -1,12 +1,18 @@
 import express, { Request, Response, NextFunction } from 'express';
+import { body, validationResult } from 'express-validator';
 
-import { AppRouter, Controller, Get, Post, Put, Delete, Patch, Use } from '../src';
+import { AppRouter, Controller, Get, Post, Put, Delete, Patch, Use, Validate } from '../src';
 import './types';
 
 beforeAll(() => {
     const app = express();
     app.use(express.json());
     app.use(AppRouter.getInstance());
+
+    // Error handler.
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        res.status(400).send();
+    });
 
     global.app = app;
 });
@@ -60,5 +66,31 @@ class TestMiddlewareController {
     @Use(thirdMiddleware)
     async getMethod(req: Request, res: Response) {
         res.status(200).send(req.body.first);
+    }
+}
+
+const validateRequest = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return next(new Error('validation error'));
+    }
+
+    next();
+};
+
+@Controller('/validation')
+class TestValidationController {
+    @Post('/post')
+    @Validate(
+        body('email').isEmail().withMessage('Email must be valid'),
+        body('password')
+            .trim()
+            .isLength({ min: 4, max: 20 })
+            .withMessage('Password must be between 4 and 20 characters')
+    )
+    @Use(validateRequest)
+    async postMethod(req: Request, res: Response) {
+        res.status(200).send();
     }
 }

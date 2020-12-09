@@ -13,7 +13,7 @@ export function Use(middleware: RequestHandler) {
     return function(target: any, key: string, desc: PropertyDescriptor) {
         const middlewares = Reflect.getMetadata(MetaKeys.Middleware, target, key) || [];
 
-        middlewares.push(middleware);
+        middlewares.unshift(middleware);
 
         Reflect.defineMetadata(MetaKeys.Middleware, [...middlewares], target, key);
     }

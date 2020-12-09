@@ -14,7 +14,10 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./test/envSetup.ts"
+    ]
   },
   "repository": {
     "type": "git",

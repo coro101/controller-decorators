@@ -21,10 +21,13 @@ export function Controller(routePrefix: string) {
             const method: Methods = Reflect.getMetadata(MetaKeys.Method, target.prototype, key);
             const middlewares = Reflect.getMetadata(MetaKeys.Middleware, target.prototype, key) ||[];
             const bodyHas = Reflect.getMetadata(MetaKeys.BodyHas, target.prototype, key) || [];
+            const validate = Reflect.getMetadata(MetaKeys.Validate, target.prototype, key) || [];
 
             if (bodyHas.length > 0) {
                 middlewares.push(validateBodyHas(bodyHas));
             }
+
+            middlewares.unshift(validate);
 
             if (path) {
                 // Register function to the express's router.
